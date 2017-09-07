@@ -1,0 +1,1 @@
+// main js entry point import all your other js files here, it uses babel so you can just import
