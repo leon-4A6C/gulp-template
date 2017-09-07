@@ -16,7 +16,9 @@ gulp.task("sass", () => {
             browsers: browserSupport,
             cascade: false
         }))
+        .pipe(cssnano())
         .pipe(gulp.dest("./dist/style/"))
+        .pipe(browserSync.stream())
 });
 
 gulp.task("js", () => {
@@ -32,16 +34,34 @@ gulp.task("js", () => {
         }))
         .pipe(uglify())
         .pipe(gulp.dest("./dist/js/"))
+        .pipe(browserSync.stream())
 });
 
 gulp.task("image", () => {
     gulp.src("./src/image/**/*.*")
         .pipe(imagemin())
         .pipe(gulp.dest("./dist/image/"))
+        .pipe(browserSync.stream())
 })
 
-gulp.task("watch", ["sass", "js", "image"], () => {
+gulp.task("html", () => {
+    gulp.src("./src/**/*.html")
+        .pipe(gulp.dest("./dist/"))
+        .pipe(browserSync.stream())
+})
+
+gulp.task("build", ["html", "sass", "js", "image"], () => {
+
+})
+
+gulp.task("watch", ["html", "sass", "js", "image"], () => {
     browserSync.init({
         server: "./dist"
     });
+
+    gulp.watch("./src/**/*.html", ["html"]);
+    gulp.watch("./src/style/**/*.*", ["sass"]);
+    gulp.watch("./src/js/**/*.js", ["js"]);
+    gulp.watch("./src/image/**/*.*", ["image"]);
+
 });
